@@ -94,6 +94,9 @@ class ProductUpdate(BaseModel):
     def require_change(self) -> "ProductUpdate":
         if not self.model_fields_set:
             raise ValueError("At least one field must be provided.")
+        required_fields = self.model_fields_set - {"description"}
+        if any(getattr(self, field) is None for field in required_fields):
+            raise ValueError("Required product fields cannot be null.")
         return self
 
 

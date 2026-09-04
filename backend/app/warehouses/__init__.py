@@ -1,2 +1,1 @@
-"""Warehouses feature (Milestone 4)."""
-
+"""Warehouse management feature."""

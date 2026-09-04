@@ -7,10 +7,10 @@ import { ProtectedRoute } from './features/auth/ProtectedRoute'
 import { RoleRoute } from './features/auth/RoleRoute'
 import { UsersPage } from './features/users/UsersPage'
 import { ProductsPage } from './features/products/ProductsPage'
+import { InventoryPage } from './features/inventory/InventoryPage'
+import { WarehousesPage } from './features/warehouses/WarehousesPage'
 
 const pages: Record<string, { title: string; milestone: number }> = {
-  inventory: { title: 'Inventory', milestone: 4 },
-  warehouses: { title: 'Warehouses', milestone: 4 },
   movements: { title: 'Stock movements', milestone: 5 },
   orders: { title: 'Orders', milestone: 6 },
   suppliers: { title: 'Suppliers', milestone: 7 },
@@ -26,6 +26,8 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="products" element={<ProductsPage />} />
+          <Route path="inventory" element={<InventoryPage />} />
+          <Route path="warehouses" element={<WarehousesPage />} />
           <Route path="users" element={<RoleRoute roles={['ADMIN']}><UsersPage /></RoleRoute>} />
           {Object.entries(pages).map(([path, page]) => (
             <Route

@@ -9,8 +9,10 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import get_settings
 from app.core.database import Base
+from app.inventory.models import Inventory, StockMovement  # noqa: F401
 from app.products.models import Product  # noqa: F401 - registers metadata for autogenerate
 from app.users.models import User  # noqa: F401 - registers metadata for autogenerate
+from app.warehouses.models import Warehouse  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

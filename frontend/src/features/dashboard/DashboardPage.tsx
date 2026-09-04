@@ -10,13 +10,16 @@ import { Alert, Button, Card, Col, Row, Space, Statistic, Tag, Typography } from
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getProducts } from '../../api/products'
+import { getInventory } from '../../api/inventory'
+import { getWarehouses } from '../../api/warehouses'
 import { useHealth } from '../../hooks/useHealth'
 
 const milestones = [
   { title: 'Foundation', description: 'API, database, Docker, and application shell', status: 'Complete' },
   { title: 'Identity & access', description: 'Authentication, users, and role-based access', status: 'Complete' },
   { title: 'Product catalog', description: 'Product management and searchable catalog', status: 'Complete' },
-  { title: 'Inventory operations', description: 'Warehouses, receipts, and stock adjustments', status: 'Next' },
+  { title: 'Inventory operations', description: 'Warehouses, receipts, and stock adjustments', status: 'Complete' },
+  { title: 'Stock movement flow', description: 'Transfers and movement audit history', status: 'Next' },
 ]
 
 export function DashboardPage() {
@@ -26,6 +29,14 @@ export function DashboardPage() {
   const productSummary = useQuery({
     queryKey: ['products', 'dashboard-summary'],
     queryFn: () => getProducts({ page: 1, page_size: 1 }),
+  })
+  const warehouseSummary = useQuery({
+    queryKey: ['warehouses', 'dashboard-summary'],
+    queryFn: () => getWarehouses({ page: 1, page_size: 1 }),
+  })
+  const inventorySummary = useQuery({
+    queryKey: ['inventory', 'dashboard-summary'],
+    queryFn: () => getInventory({ page: 1, page_size: 1 }),
   })
 
   return (
@@ -44,8 +55,8 @@ export function DashboardPage() {
         className="foundation-alert"
         type="info"
         showIcon
-        message="Milestone 3 product catalog is ready"
-        description="Products are searchable, filterable, and protected by role-based permissions. Inventory operations are next."
+        message="Milestone 4 inventory operations are ready"
+        description="Warehouses, stock receipts, adjustments, live availability, and low-stock visibility are operational. Transfers are next."
       />
 
       <Row gutter={[16, 16]}>
@@ -53,13 +64,13 @@ export function DashboardPage() {
           <Card loading={productSummary.isLoading}><Statistic title="Products" value={productSummary.data?.total ?? 0} prefix={<InboxOutlined />} /></Card>
         </Col>
         <Col xs={24} sm={12} xl={6}>
-          <Card><Statistic title="Warehouses" value={0} prefix={<ShopOutlined />} /></Card>
+          <Card loading={warehouseSummary.isLoading}><Statistic title="Warehouses" value={warehouseSummary.data?.total ?? 0} prefix={<ShopOutlined />} /></Card>
         </Col>
         <Col xs={24} sm={12} xl={6}>
-          <Card><Statistic title="Inventory units" value={0} prefix={<DatabaseOutlined />} /></Card>
+          <Card loading={inventorySummary.isLoading}><Statistic title="Inventory units" value={inventorySummary.data?.total_available_quantity ?? 0} prefix={<DatabaseOutlined />} /></Card>
         </Col>
         <Col xs={24} sm={12} xl={6}>
-          <Card><Statistic title="Low-stock alerts" value={0} prefix={<AlertOutlined />} /></Card>
+          <Card loading={inventorySummary.isLoading}><Statistic title="Low-stock alerts" value={inventorySummary.data?.low_stock_count ?? 0} prefix={<AlertOutlined />} /></Card>
         </Col>
       </Row>
 
@@ -69,14 +80,14 @@ export function DashboardPage() {
             <Space direction="vertical" size={0} className="roadmap-list">
               {milestones.map((milestone, index) => (
                 <div className="roadmap-item" key={milestone.title}>
-                  <span className={`roadmap-index ${index < 3 ? 'is-complete' : ''}`}>
-                    {index < 3 ? <CheckCircleFilled /> : index + 1}
+                  <span className={`roadmap-index ${index < 4 ? 'is-complete' : ''}`}>
+                    {index < 4 ? <CheckCircleFilled /> : index + 1}
                   </span>
                   <div className="roadmap-copy">
                     <Typography.Text strong>{milestone.title}</Typography.Text>
                     <Typography.Text type="secondary">{milestone.description}</Typography.Text>
                   </div>
-                  <Tag color={index < 3 ? 'success' : index === 3 ? 'blue' : 'default'}>
+                  <Tag color={index < 4 ? 'success' : index === 4 ? 'blue' : 'default'}>
                     {milestone.status}
                   </Tag>
                 </div>
@@ -100,8 +111,8 @@ export function DashboardPage() {
               <span><span className="status-dot online" />PostgreSQL</span>
               <Typography.Text type="success">Configured</Typography.Text>
             </div>
-            <Button type="link" onClick={() => navigate('/inventory')}>
-              Continue to Milestone 4 <ArrowRightOutlined />
+            <Button type="link" onClick={() => navigate('/movements')}>
+              Continue to Milestone 5 <ArrowRightOutlined />
             </Button>
           </Card>
         </Col>

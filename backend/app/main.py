@@ -9,8 +9,10 @@ from app.common.errors import register_error_handlers
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 from app.health.router import router as health_router
+from app.inventory.router import router as inventory_router
 from app.products.router import router as products_router
 from app.users.router import router as users_router
+from app.warehouses.router import router as warehouses_router
 
 
 @asynccontextmanager
@@ -42,6 +44,8 @@ def create_app() -> FastAPI:
     application.include_router(auth_router, prefix="/api")
     application.include_router(users_router, prefix="/api")
     application.include_router(products_router, prefix="/api")
+    application.include_router(warehouses_router, prefix="/api")
+    application.include_router(inventory_router, prefix="/api")
     return application
 
 
