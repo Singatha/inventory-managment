@@ -2,7 +2,7 @@
 
 StockFlow is a production-oriented inventory and warehouse management system. It is being built as a modular monolith so transactional inventory rules remain easy to reason about while feature boundaries stay explicit.
 
-> Current delivery: **Milestone 4 — Warehouse and inventory operations**
+> Current delivery: **Milestone 5 — Transfers and stock movement history**
 
 ## What is included
 
@@ -24,8 +24,12 @@ StockFlow is a production-oriented inventory and warehouse management system. It
 - Transactional stock receipts and reasoned adjustments with row locking
 - Audit-ready stock movement records created atomically with inventory changes
 - Inventory totals, low-stock filtering, warehouse management, and role-aware operations UI
+- Atomic warehouse transfers with deterministic source/destination locking
+- Paired transfer-out and transfer-in movements with a shared audit reference
+- Searchable stock movement history with product, warehouse, type, and date filters
+- Product-level recent movements and a detailed audit drawer
 
-Transfers and stock movement history are intentionally deferred to Milestone 5. The receipt and adjustment audit records they build on are already persisted transactionally.
+Order reservations and shipment workflows are intentionally deferred to Milestone 6. They will build on the same transactional inventory and movement foundation.
 
 ## Architecture
 
@@ -137,7 +141,7 @@ Copy `.env.example` to `.env` and replace secrets before any shared or productio
 
 ## API documentation
 
-FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for access rules, [products.md](docs/products.md) for the product API, and [inventory.md](docs/inventory.md) for warehouse and inventory operations.
+FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for access rules, [products.md](docs/products.md) for the product API, [inventory.md](docs/inventory.md) for inventory operations, and [stock-movements.md](docs/stock-movements.md) for transfers and audit history.
 
 ## Roadmap
 
@@ -145,8 +149,8 @@ FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the Ope
 2. ✅ **Authentication** — users, JWT sessions, roles, login, protected routes
 3. ✅ **Products** — product CRUD, filtering, soft deletion, product UI
 4. ✅ **Inventory** — warehouses, inventory, receipts, adjustments
-5. **Next: Stock movements** — transfers and stock movement audit history
-6. Orders, reservations, cancellation, shipment
+5. ✅ **Stock movements** — transfers and stock movement audit history
+6. **Next: Orders** — orders, reservations, cancellation, shipment
 7. Suppliers and purchase orders
 8. Concurrency protection and transaction tests
 9. RabbitMQ, domain events, workers, low-stock events

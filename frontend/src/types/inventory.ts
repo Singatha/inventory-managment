@@ -57,11 +57,21 @@ export interface InventoryListResponse {
   low_stock_count: number
 }
 
+export type StockMovementType =
+  | 'RECEIVE'
+  | 'ADJUSTMENT'
+  | 'RESERVE'
+  | 'RELEASE'
+  | 'SHIPMENT'
+  | 'TRANSFER_IN'
+  | 'TRANSFER_OUT'
+  | 'RETURN'
+
 export interface StockMovement {
   id: number
   product_id: number
   warehouse_id: number
-  type: 'RECEIVE' | 'ADJUSTMENT'
+  type: StockMovementType
   quantity: number
   reference_type: string | null
   reference_id: number | null
@@ -87,4 +97,49 @@ export interface StockAdjustmentInput {
   warehouse_id: number
   quantity: number
   reason: string
+}
+
+export interface StockTransferInput {
+  product_id: number
+  source_warehouse_id: number
+  destination_warehouse_id: number
+  quantity: number
+  notes?: string | null
+}
+
+export interface StockTransferResponse {
+  source_inventory: InventoryItem
+  destination_inventory: InventoryItem
+  movements: StockMovement[]
+}
+
+export interface MovementUser {
+  id: number
+  first_name: string
+  last_name: string
+}
+
+export interface StockMovementDetail extends StockMovement {
+  product: InventoryProduct
+  warehouse: InventoryWarehouse
+  creator: MovementUser
+}
+
+export interface StockMovementQuery {
+  page: number
+  page_size: number
+  search?: string
+  product_id?: number
+  warehouse_id?: number
+  movement_type?: StockMovementType
+  created_from?: string
+  created_to?: string
+  sort_order?: SortOrder
+}
+
+export interface StockMovementListResponse {
+  items: StockMovementDetail[]
+  total: number
+  page: number
+  page_size: number
 }

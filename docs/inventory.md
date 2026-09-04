@@ -34,6 +34,7 @@ Warehouse codes are trimmed and uppercased. Attempting to delete a warehouse ref
 | `GET` | `/api/inventory/warehouse/{warehouse_id}` | Inventory held at one warehouse |
 | `POST` | `/api/inventory/receive` | Add a positive received quantity |
 | `POST` | `/api/inventory/adjust` | Apply a signed, non-zero quantity with a required reason |
+| `POST` | `/api/inventory/transfer` | Atomically move a positive quantity between warehouses |
 
 The list supports product/warehouse search, warehouse and low-stock filters, pagination, and allowlisted sorting. It returns on-hand, reserved, available, and low-stock aggregates for the selected filters.
 
@@ -47,5 +48,8 @@ The list supports product/warehouse search, warehouse and low-stock filters, pag
 - An adjustment cannot reduce on-hand stock below reserved stock.
 - Inactive products cannot receive inventory changes.
 - Every successful receipt or adjustment creates a non-zero stock movement in the same transaction.
+- A transfer requires different source and destination warehouses and sufficient available source stock.
+- Transfer balance updates and their paired `TRANSFER_OUT`/`TRANSFER_IN` movements commit or roll back together.
+- Existing source and destination inventory rows are locked in stable warehouse-ID order.
 
-Movement types needed by future workflows already exist in the enum, but transfers and movement-history queries belong to Milestone 5.
+Movement types needed by order workflows already exist in the enum. Reservations, releases, shipments, and returns are introduced with the owning workflows in Milestone 6.

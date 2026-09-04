@@ -4,7 +4,7 @@ PostgreSQL is the sole transactional datastore. SQLAlchemy 2.x uses its async AP
 
 ## Current schema
 
-The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`. Milestone 4 adds `warehouses`, `inventory`, `stock_movements`, and the `stock_movement_type` enum. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
+The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`. Milestone 4 adds `warehouses`, `inventory`, `stock_movements`, and the `stock_movement_type` enum. Milestone 5 adds movement-history indexes for warehouse, type, and transfer references. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
 
 ## Current inventory relationships
 
@@ -60,6 +60,8 @@ erDiagram
 ```
 
 The `(product_id, warehouse_id)` inventory pair is unique. Database checks require on-hand and reserved quantities to remain non-negative and prevent reserved stock from exceeding on-hand stock. Available quantity is computed as `quantity_on_hand - quantity_reserved`, never stored.
+
+Transfer movement pairs use `reference_type = TRANSFER` and share the source movement ID as `reference_id`. The reference index makes both sides of a transfer efficient to retrieve without introducing a separate transfer aggregate before one is needed.
 
 ## Migration policy
 

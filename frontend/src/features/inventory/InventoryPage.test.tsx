@@ -8,6 +8,7 @@ const apiMocks = vi.hoisted(() => ({
   getInventory: vi.fn(),
   receiveStock: vi.fn(),
   adjustStock: vi.fn(),
+  transferStock: vi.fn(),
   getProducts: vi.fn(),
   getWarehouses: vi.fn(),
 }))
@@ -16,6 +17,7 @@ vi.mock('../../api/inventory', () => ({
   getInventory: apiMocks.getInventory,
   receiveStock: apiMocks.receiveStock,
   adjustStock: apiMocks.adjustStock,
+  transferStock: apiMocks.transferStock,
 }))
 vi.mock('../../api/products', () => ({ getProducts: apiMocks.getProducts }))
 vi.mock('../../api/warehouses', () => ({ getWarehouses: apiMocks.getWarehouses }))

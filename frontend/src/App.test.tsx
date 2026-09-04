@@ -29,6 +29,10 @@ vi.mock('./api/inventory', () => ({
     low_stock_count: 0,
   }),
   getProductInventory: vi.fn(),
+  getStockMovements: vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, page_size: 5 }),
+  receiveStock: vi.fn(),
+  adjustStock: vi.fn(),
+  transferStock: vi.fn(),
 }))
 
 vi.mock('./features/auth/AuthContext', () => ({
@@ -55,6 +59,6 @@ test('renders the dashboard shell and milestone status', async () => {
 
   expect(screen.getByLabelText('StockFlow home')).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: 'Good morning' })).toBeInTheDocument()
-  expect(screen.getByText('Milestone 4 inventory operations are ready')).toBeInTheDocument()
+  expect(screen.getByText('Milestone 5 stock movement flow is ready')).toBeInTheDocument()
   expect(screen.getByText('API operational')).toBeInTheDocument()
 })

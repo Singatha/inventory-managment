@@ -9,9 +9,9 @@ import { UsersPage } from './features/users/UsersPage'
 import { ProductsPage } from './features/products/ProductsPage'
 import { InventoryPage } from './features/inventory/InventoryPage'
 import { WarehousesPage } from './features/warehouses/WarehousesPage'
+import { MovementsPage } from './features/movements/MovementsPage'
 
 const pages: Record<string, { title: string; milestone: number }> = {
-  movements: { title: 'Stock movements', milestone: 5 },
   orders: { title: 'Orders', milestone: 6 },
   suppliers: { title: 'Suppliers', milestone: 7 },
   'purchase-orders': { title: 'Purchase orders', milestone: 7 },
@@ -28,6 +28,7 @@ export default function App() {
           <Route path="products" element={<ProductsPage />} />
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="warehouses" element={<WarehousesPage />} />
+          <Route path="movements" element={<MovementsPage />} />
           <Route path="users" element={<RoleRoute roles={['ADMIN']}><UsersPage /></RoleRoute>} />
           {Object.entries(pages).map(([path, page]) => (
             <Route
