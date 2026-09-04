@@ -1,2 +1,1 @@
-"""Products feature (Milestone 3)."""
-
+"""Product catalog feature."""

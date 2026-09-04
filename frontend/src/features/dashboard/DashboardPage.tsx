@@ -8,18 +8,25 @@ import {
 } from '@ant-design/icons'
 import { Alert, Button, Card, Col, Row, Space, Statistic, Tag, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { getProducts } from '../../api/products'
 import { useHealth } from '../../hooks/useHealth'
 
 const milestones = [
   { title: 'Foundation', description: 'API, database, Docker, and application shell', status: 'Complete' },
   { title: 'Identity & access', description: 'Authentication, users, and role-based access', status: 'Complete' },
-  { title: 'Product catalog', description: 'Product management and searchable catalog', status: 'Next' },
+  { title: 'Product catalog', description: 'Product management and searchable catalog', status: 'Complete' },
+  { title: 'Inventory operations', description: 'Warehouses, receipts, and stock adjustments', status: 'Next' },
 ]
 
 export function DashboardPage() {
   const navigate = useNavigate()
   const health = useHealth()
   const apiOnline = health.data?.status === 'ok'
+  const productSummary = useQuery({
+    queryKey: ['products', 'dashboard-summary'],
+    queryFn: () => getProducts({ page: 1, page_size: 1 }),
+  })
 
   return (
     <section className="page-section">
@@ -37,13 +44,13 @@ export function DashboardPage() {
         className="foundation-alert"
         type="info"
         showIcon
-        message="Milestone 2 identity and access is ready"
-        description="Sessions are protected with access and refresh tokens. The product catalog is next."
+        message="Milestone 3 product catalog is ready"
+        description="Products are searchable, filterable, and protected by role-based permissions. Inventory operations are next."
       />
 
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} xl={6}>
-          <Card><Statistic title="Products" value={0} prefix={<InboxOutlined />} /></Card>
+          <Card loading={productSummary.isLoading}><Statistic title="Products" value={productSummary.data?.total ?? 0} prefix={<InboxOutlined />} /></Card>
         </Col>
         <Col xs={24} sm={12} xl={6}>
           <Card><Statistic title="Warehouses" value={0} prefix={<ShopOutlined />} /></Card>
@@ -62,14 +69,14 @@ export function DashboardPage() {
             <Space direction="vertical" size={0} className="roadmap-list">
               {milestones.map((milestone, index) => (
                 <div className="roadmap-item" key={milestone.title}>
-                  <span className={`roadmap-index ${index < 2 ? 'is-complete' : ''}`}>
-                    {index < 2 ? <CheckCircleFilled /> : index + 1}
+                  <span className={`roadmap-index ${index < 3 ? 'is-complete' : ''}`}>
+                    {index < 3 ? <CheckCircleFilled /> : index + 1}
                   </span>
                   <div className="roadmap-copy">
                     <Typography.Text strong>{milestone.title}</Typography.Text>
                     <Typography.Text type="secondary">{milestone.description}</Typography.Text>
                   </div>
-                  <Tag color={index < 2 ? 'success' : index === 2 ? 'blue' : 'default'}>
+                  <Tag color={index < 3 ? 'success' : index === 3 ? 'blue' : 'default'}>
                     {milestone.status}
                   </Tag>
                 </div>
@@ -93,8 +100,8 @@ export function DashboardPage() {
               <span><span className="status-dot online" />PostgreSQL</span>
               <Typography.Text type="success">Configured</Typography.Text>
             </div>
-            <Button type="link" onClick={() => navigate('/products')}>
-              Continue to Milestone 3 <ArrowRightOutlined />
+            <Button type="link" onClick={() => navigate('/inventory')}>
+              Continue to Milestone 4 <ArrowRightOutlined />
             </Button>
           </Card>
         </Col>

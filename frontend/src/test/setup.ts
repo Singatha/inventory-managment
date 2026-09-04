@@ -14,3 +14,5 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
+const browserGetComputedStyle = window.getComputedStyle
+window.getComputedStyle = (element: Element) => browserGetComputedStyle(element)

@@ -40,6 +40,10 @@ button, input { font: inherit; }
 .status-dot { display: inline-block; width: 8px; height: 8px; margin-right: 10px; background: #bdc5d3; border-radius: 50%; }
 .status-dot.online { background: #13a474; box-shadow: 0 0 0 4px #e8f8f2; }
 .status-card .ant-btn { margin: 16px 0 0 -15px; }
+.full-width { width: 100%; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.table-toolbar { margin-bottom: 18px; display: grid; grid-template-columns: minmax(240px, 1fr) 220px 160px; gap: 12px; }
+.table-link { height: auto; padding: 0; font-weight: 600; text-align: left; }
 .user-cell { display: flex; align-items: center; gap: 12px; }
 .user-cell > span:last-child { display: flex; flex-direction: column; }
 .user-initials { width: 36px; height: 36px; display: grid; place-items: center; flex: 0 0 36px; border-radius: 10px; color: #245bd8; background: #edf2ff; font-size: 12px; font-weight: 800; }
@@ -65,6 +69,8 @@ button, input { font: inherit; }
   .page-heading { align-items: flex-start; }
   .roadmap-item { grid-template-columns: 34px minmax(0, 1fr); padding: 12px 0; }
   .roadmap-item > .ant-tag { grid-column: 2; width: fit-content; }
+  .table-toolbar { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; gap: 0; }
 }
 
 @media (max-width: 860px) {

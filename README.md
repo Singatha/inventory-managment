@@ -2,7 +2,7 @@
 
 StockFlow is a production-oriented inventory and warehouse management system. It is being built as a modular monolith so transactional inventory rules remain easy to reason about while feature boundaries stay explicit.
 
-> Current delivery: **Milestone 2 — Authentication and users**
+> Current delivery: **Milestone 3 — Product management**
 
 ## What is included
 
@@ -16,8 +16,11 @@ StockFlow is a production-oriented inventory and warehouse management system. It
 - Argon2 password hashing and signed JWT access/refresh tokens
 - Role-based API authorization and admin-only user management
 - Login, protected routes, automatic token refresh, and session-aware navigation
+- Product CRUD with exact decimal pricing and unique, normalized SKUs
+- Server-side product pagination, search, category/status filters, and sorting
+- Permission-aware product table, create/edit form, details, and soft deletion
 
-Product and inventory workflows are intentionally not implemented yet. The project plan introduces them one milestone at a time so each change can be migrated, tested, and documented.
+Warehouse and inventory workflows are intentionally not implemented yet. The project plan introduces them one milestone at a time so each change can be migrated, tested, and documented.
 
 ## Architecture
 
@@ -129,14 +132,14 @@ Copy `.env.example` to `.env` and replace secrets before any shared or productio
 
 ## API documentation
 
-FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for the Milestone 2 endpoints and authorization rules.
+FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for access rules and [products.md](docs/products.md) for the product API.
 
 ## Roadmap
 
 1. ✅ **Foundation** — repository, API, web shell, PostgreSQL, Docker, health checks
 2. ✅ **Authentication** — users, JWT sessions, roles, login, protected routes
-3. **Next: Products** — product CRUD and product UI
-4. Warehouses, inventory, receipts, adjustments
+3. ✅ **Products** — product CRUD, filtering, soft deletion, product UI
+4. **Next: Inventory** — warehouses, inventory, receipts, adjustments
 5. Transfers and stock movement audit history
 6. Orders, reservations, cancellation, shipment
 7. Suppliers and purchase orders

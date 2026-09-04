@@ -4,7 +4,7 @@ PostgreSQL is the sole transactional datastore. SQLAlchemy 2.x uses its async AP
 
 ## Current schema
 
-The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
+The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`, including exact decimal prices, unique SKUs, non-negative checks, category/status indexes, and timestamps. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
 
 ## Planned relationships
 
@@ -15,6 +15,15 @@ erDiagram
         varchar email UK
         varchar password_hash
         enum role
+        boolean is_active
+    }
+    PRODUCT {
+        bigint id PK
+        varchar sku UK
+        varchar name
+        varchar category
+        numeric price
+        int reorder_level
         boolean is_active
     }
     PRODUCT ||--o{ INVENTORY : stocked_as

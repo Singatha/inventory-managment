@@ -2,7 +2,7 @@
 
 ## Current delivery
 
-Milestone 1 established the runnable vertical slice. Milestone 2 adds authenticated sessions, role enforcement, the users module, and protected client routing. Product and inventory behavior remains deliberately deferred to its owning milestones.
+Milestone 1 established the runnable vertical slice. Milestone 2 added authenticated sessions, role enforcement, the users module, and protected client routing. Milestone 3 adds the product catalog through the complete route → schema → service → repository flow. Warehouse and inventory behavior remains deliberately deferred to its owning milestones.
 
 ## System context
 
