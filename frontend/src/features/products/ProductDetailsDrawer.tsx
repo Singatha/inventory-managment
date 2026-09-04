@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Card, Descriptions, Drawer, Empty, List, Space, Tag, Typography } from 'antd'
-import { getProductInventory } from '../../api/inventory'
+import { getProductInventory, getStockMovements } from '../../api/inventory'
 import type { Product } from '../../types/product'
 
 interface ProductDetailsDrawerProps {
@@ -14,6 +14,16 @@ export function ProductDetailsDrawer({ product, onClose }: ProductDetailsDrawerP
   const inventoryQuery = useQuery({
     queryKey: ['inventory', 'product', product?.id],
     queryFn: () => getProductInventory(product?.id ?? 0),
+    enabled: Boolean(product),
+  })
+  const movementsQuery = useQuery({
+    queryKey: ['stock-movements', 'product', product?.id],
+    queryFn: () => getStockMovements({
+      page: 1,
+      page_size: 5,
+      product_id: product?.id,
+      sort_order: 'desc',
+    }),
     enabled: Boolean(product),
   })
 
@@ -49,8 +59,17 @@ export function ProductDetailsDrawer({ product, onClose }: ProductDetailsDrawerP
               />
             ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No stock has been recorded for this product." />}
           </Card>
-          <Card size="small" title="Recent stock movements">
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Movement history arrives in Milestone 5." />
+          <Card size="small" title="Recent stock movements" loading={movementsQuery.isLoading}>
+            {movementsQuery.data?.items.length ? (
+              <List
+                dataSource={movementsQuery.data.items}
+                renderItem={(movement) => (
+                  <List.Item extra={<Typography.Text type={movement.quantity < 0 ? 'danger' : 'success'} strong>{movement.quantity > 0 ? '+' : ''}{movement.quantity}</Typography.Text>}>
+                    <List.Item.Meta title={movement.type.replaceAll('_', ' ')} description={`${movement.warehouse.code} · ${new Date(movement.created_at).toLocaleString()}`} />
+                  </List.Item>
+                )}
+              />
+            ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No stock movements have been recorded." />}
           </Card>
         </Space>
       )}

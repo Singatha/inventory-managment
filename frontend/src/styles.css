@@ -45,6 +45,7 @@ button, input { font: inherit; }
 .table-toolbar { margin-bottom: 18px; display: grid; grid-template-columns: minmax(240px, 1fr) 220px 160px; gap: 12px; }
 .single-search-toolbar { width: min(100%, 520px); margin-bottom: 18px; }
 .inventory-toolbar { margin-bottom: 18px; display: grid; grid-template-columns: minmax(240px, 1fr) 260px 170px; gap: 12px; }
+.movement-toolbar { margin-bottom: 18px; display: grid; grid-template-columns: minmax(230px, 1fr) 190px 250px 260px; gap: 12px; }
 .inventory-summary { margin-bottom: 16px; }
 .inventory-identity { display: flex; flex-direction: column; gap: 2px; }
 .table-link { height: auto; padding: 0; font-weight: 600; text-align: left; }
@@ -75,6 +76,7 @@ button, input { font: inherit; }
   .roadmap-item > .ant-tag { grid-column: 2; width: fit-content; }
   .table-toolbar { grid-template-columns: 1fr; }
   .inventory-toolbar { grid-template-columns: 1fr; }
+  .movement-toolbar { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; gap: 0; }
 }
 

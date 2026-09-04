@@ -24,6 +24,7 @@ from app.core.database import Base
 
 if TYPE_CHECKING:
     from app.products.models import Product
+    from app.users.models import User
     from app.warehouses.models import Warehouse
 
 
@@ -86,6 +87,9 @@ class StockMovement(Base):
     __table_args__ = (
         CheckConstraint("quantity <> 0", name="ck_stock_movements_quantity_non_zero"),
         Index("ix_stock_movements_product_warehouse", "product_id", "warehouse_id"),
+        Index("ix_stock_movements_warehouse_id", "warehouse_id"),
+        Index("ix_stock_movements_type", "type"),
+        Index("ix_stock_movements_reference", "reference_type", "reference_id"),
         Index("ix_stock_movements_created_at", "created_at"),
     )
 
@@ -109,3 +113,7 @@ class StockMovement(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+
+    product: Mapped[Product] = relationship(lazy="raise")
+    warehouse: Mapped[Warehouse] = relationship(lazy="raise")
+    creator: Mapped[User] = relationship(lazy="raise", foreign_keys=[created_by])

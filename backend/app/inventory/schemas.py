@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.inventory.models import StockMovementType
 
@@ -93,6 +93,28 @@ class StockAdjustment(BaseModel):
         return normalized
 
 
+class StockTransfer(BaseModel):
+    product_id: int = Field(gt=0)
+    source_warehouse_id: int = Field(gt=0)
+    destination_warehouse_id: int = Field(gt=0)
+    quantity: int = Field(gt=0)
+    notes: str | None = Field(default=None, max_length=2000)
+
+    @field_validator("notes")
+    @classmethod
+    def normalize_notes(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        return normalized or None
+
+    @model_validator(mode="after")
+    def require_different_warehouses(self) -> "StockTransfer":
+        if self.source_warehouse_id == self.destination_warehouse_id:
+            raise ValueError("Source and destination warehouses must be different.")
+        return self
+
+
 class StockMovementResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -111,3 +133,30 @@ class StockMovementResponse(BaseModel):
 class InventoryOperationResponse(BaseModel):
     inventory: InventoryResponse
     movement: StockMovementResponse
+
+
+class MovementUserSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    first_name: str
+    last_name: str
+
+
+class StockMovementDetailResponse(StockMovementResponse):
+    product: ProductInventorySummary
+    warehouse: WarehouseInventorySummary
+    creator: MovementUserSummary
+
+
+class StockMovementListResponse(BaseModel):
+    items: list[StockMovementDetailResponse]
+    total: int
+    page: int
+    page_size: int
+
+
+class StockTransferResponse(BaseModel):
+    source_inventory: InventoryResponse
+    destination_inventory: InventoryResponse
+    movements: list[StockMovementResponse]

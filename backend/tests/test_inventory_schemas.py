@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.inventory.schemas import StockAdjustment, StockReceive
+from app.inventory.schemas import StockAdjustment, StockReceive, StockTransfer
 from app.warehouses.schemas import WarehouseCreate, WarehouseUpdate
 
 
@@ -67,4 +67,31 @@ def test_adjustment_rejects_zero_quantity_or_blank_reason(
             warehouse_id=2,
             quantity=quantity,
             reason=reason,
+        )
+
+
+def test_transfer_requires_distinct_warehouses_and_positive_quantity() -> None:
+    transfer = StockTransfer(
+        product_id=1,
+        source_warehouse_id=2,
+        destination_warehouse_id=3,
+        quantity=4,
+        notes="  Rebalance stock  ",
+    )
+    assert transfer.notes == "Rebalance stock"
+
+    with pytest.raises(ValidationError):
+        StockTransfer(
+            product_id=1,
+            source_warehouse_id=2,
+            destination_warehouse_id=2,
+            quantity=4,
+        )
+
+    with pytest.raises(ValidationError):
+        StockTransfer(
+            product_id=1,
+            source_warehouse_id=2,
+            destination_warehouse_id=3,
+            quantity=0,
         )

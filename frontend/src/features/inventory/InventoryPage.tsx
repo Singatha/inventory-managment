@@ -1,4 +1,4 @@
-import { AuditOutlined, InboxOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons'
+import { AuditOutlined, InboxOutlined, PlusOutlined, SwapOutlined, WarningOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Input, Row, Select, Space, Statistic, Table, Tag, Typography } from 'antd'
 import type { TableColumnsType, TablePaginationConfig } from 'antd'
@@ -11,6 +11,7 @@ import { getApiErrorMessage } from '../../api/client'
 import type { InventoryItem, InventoryQuery, InventorySortField } from '../../types/inventory'
 import { useAuth } from '../auth/AuthContext'
 import { InventoryOperationModal, type InventoryOperation } from './InventoryOperationModal'
+import { TransferStockModal } from './TransferStockModal'
 
 export function InventoryPage() {
   const { user } = useAuth()
@@ -22,6 +23,7 @@ export function InventoryPage() {
   })
   const [operation, setOperation] = useState<InventoryOperation | null>(null)
   const [selectedInventory, setSelectedInventory] = useState<InventoryItem | null>(null)
+  const [transferOpen, setTransferOpen] = useState(false)
   const canManage = user?.role === 'ADMIN' || user?.role === 'WAREHOUSE_MANAGER'
   const inventoryQuery = useQuery({
     queryKey: ['inventory', query],
@@ -110,6 +112,7 @@ export function InventoryPage() {
         {canManage && (
           <Space>
             <Button icon={<AuditOutlined />} onClick={() => openOperation('adjust')}>Adjust stock</Button>
+            <Button icon={<SwapOutlined />} onClick={() => setTransferOpen(true)}>Transfer stock</Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => openOperation('receive')}>Receive stock</Button>
           </Space>
         )}
@@ -169,6 +172,13 @@ export function InventoryPage() {
           setOperation(null)
           setSelectedInventory(null)
         }}
+      />
+      <TransferStockModal
+        open={transferOpen}
+        products={productsQuery.data?.items ?? []}
+        warehouses={warehousesQuery.data?.items ?? []}
+        optionsLoading={productsQuery.isLoading || warehousesQuery.isLoading}
+        onClose={() => setTransferOpen(false)}
       />
     </section>
   )
