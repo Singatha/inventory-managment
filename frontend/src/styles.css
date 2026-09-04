@@ -1,0 +1,50 @@
+:root {
+  color: #172033;
+  background: #f5f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input { font: inherit; }
+
+.app-shell { min-height: 100vh; }
+.app-sider { position: sticky !important; top: 0; height: 100vh; overflow-y: auto; box-shadow: 4px 0 20px rgb(12 24 48 / 8%); z-index: 10; }
+.brand { height: 70px; display: flex; align-items: center; gap: 12px; padding: 0 20px; color: white; font-size: 19px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap; overflow: hidden; }
+.brand:hover { color: white; }
+.brand-mark { display: grid; place-items: center; width: 36px; min-width: 36px; height: 36px; color: white; background: #246bfd; border-radius: 10px; }
+.app-sider .ant-menu { padding: 8px; }
+.app-sider .ant-menu-item-group-title { margin-top: 10px; font-size: 10px; font-weight: 700; letter-spacing: .11em; color: #76819b; }
+.app-header { position: sticky; top: 0; z-index: 9; height: 70px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; background: rgb(255 255 255 / 92%); backdrop-filter: blur(12px); border-bottom: 1px solid #e8ecf3; }
+.header-context { color: #63708a; }
+.user-avatar { background: #e9efff !important; color: #245bd8 !important; font-weight: 700; }
+.app-content { padding: 24px 28px 40px; overflow: hidden; }
+.page-section { max-width: 1440px; margin: 0 auto; }
+.page-heading { margin: 20px 0 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.page-heading .ant-typography { margin: 0 !important; }
+.page-heading > div { display: flex; flex-direction: column; gap: 4px; }
+.foundation-alert { margin-bottom: 20px; }
+.dashboard-row { margin-top: 16px; }
+.roadmap-card, .status-card { height: 100%; }
+.roadmap-list { width: 100%; }
+.roadmap-item { width: 100%; min-height: 76px; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: center; border-bottom: 1px solid #edf0f5; }
+.roadmap-item:last-child { border-bottom: 0; }
+.roadmap-index { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #64718b; background: #eef1f6; font-size: 13px; font-weight: 700; }
+.roadmap-index.is-complete { color: #13a474; background: #e8f8f2; }
+.roadmap-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.status-line { padding: 14px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #edf0f5; }
+.status-dot { display: inline-block; width: 8px; height: 8px; margin-right: 10px; background: #bdc5d3; border-radius: 50%; }
+.status-dot.online { background: #13a474; box-shadow: 0 0 0 4px #e8f8f2; }
+.status-card .ant-btn { margin: 16px 0 0 -15px; }
+
+@media (max-width: 767px) {
+  .app-sider { position: fixed !important; }
+  .app-header { padding: 0 16px; }
+  .header-context { display: none; }
+  .app-content { padding: 18px 16px 32px; }
+  .page-heading { align-items: flex-start; }
+  .roadmap-item { grid-template-columns: 34px minmax(0, 1fr); padding: 12px 0; }
+  .roadmap-item > .ant-tag { grid-column: 2; width: fit-content; }
+}
+
