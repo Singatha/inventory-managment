@@ -2,7 +2,7 @@
 
 StockFlow is a production-oriented inventory and warehouse management system. It is being built as a modular monolith so transactional inventory rules remain easy to reason about while feature boundaries stay explicit.
 
-> Current delivery: **Milestone 3 — Product management**
+> Current delivery: **Milestone 4 — Warehouse and inventory operations**
 
 ## What is included
 
@@ -19,8 +19,13 @@ StockFlow is a production-oriented inventory and warehouse management system. It
 - Product CRUD with exact decimal pricing and unique, normalized SKUs
 - Server-side product pagination, search, category/status filters, and sorting
 - Permission-aware product table, create/edit form, details, and soft deletion
+- Warehouse CRUD with unique, normalized location codes
+- Per-product, per-warehouse inventory with computed available quantities
+- Transactional stock receipts and reasoned adjustments with row locking
+- Audit-ready stock movement records created atomically with inventory changes
+- Inventory totals, low-stock filtering, warehouse management, and role-aware operations UI
 
-Warehouse and inventory workflows are intentionally not implemented yet. The project plan introduces them one milestone at a time so each change can be migrated, tested, and documented.
+Transfers and stock movement history are intentionally deferred to Milestone 5. The receipt and adjustment audit records they build on are already persisted transactionally.
 
 ## Architecture
 
@@ -132,15 +137,15 @@ Copy `.env.example` to `.env` and replace secrets before any shared or productio
 
 ## API documentation
 
-FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for access rules and [products.md](docs/products.md) for the product API.
+FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for access rules, [products.md](docs/products.md) for the product API, and [inventory.md](docs/inventory.md) for warehouse and inventory operations.
 
 ## Roadmap
 
 1. ✅ **Foundation** — repository, API, web shell, PostgreSQL, Docker, health checks
 2. ✅ **Authentication** — users, JWT sessions, roles, login, protected routes
 3. ✅ **Products** — product CRUD, filtering, soft deletion, product UI
-4. **Next: Inventory** — warehouses, inventory, receipts, adjustments
-5. Transfers and stock movement audit history
+4. ✅ **Inventory** — warehouses, inventory, receipts, adjustments
+5. **Next: Stock movements** — transfers and stock movement audit history
 6. Orders, reservations, cancellation, shipment
 7. Suppliers and purchase orders
 8. Concurrency protection and transaction tests

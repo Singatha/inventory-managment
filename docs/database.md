@@ -4,9 +4,9 @@ PostgreSQL is the sole transactional datastore. SQLAlchemy 2.x uses its async AP
 
 ## Current schema
 
-The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`, including exact decimal prices, unique SKUs, non-negative checks, category/status indexes, and timestamps. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
+The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`. Milestone 4 adds `warehouses`, `inventory`, `stock_movements`, and the `stock_movement_type` enum. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
 
-## Planned relationships
+## Current inventory relationships
 
 ```mermaid
 erDiagram
@@ -26,10 +26,32 @@ erDiagram
         int reorder_level
         boolean is_active
     }
+    WAREHOUSE {
+        bigint id PK
+        varchar code UK
+        varchar name
+        varchar location
+    }
+    INVENTORY {
+        bigint id PK
+        bigint product_id FK
+        bigint warehouse_id FK
+        int quantity_on_hand
+        int quantity_reserved
+    }
+    STOCK_MOVEMENT {
+        bigint id PK
+        bigint product_id FK
+        bigint warehouse_id FK
+        enum type
+        int quantity
+        bigint created_by FK
+    }
     PRODUCT ||--o{ INVENTORY : stocked_as
     WAREHOUSE ||--o{ INVENTORY : holds
     PRODUCT ||--o{ STOCK_MOVEMENT : records
     WAREHOUSE ||--o{ STOCK_MOVEMENT : records
+    USER ||--o{ STOCK_MOVEMENT : performs
     ORDER ||--|{ ORDER_ITEM : contains
     PRODUCT ||--o{ ORDER_ITEM : ordered
     WAREHOUSE ||--o{ ORDER_ITEM : fulfilled_from
@@ -37,7 +59,7 @@ erDiagram
     PURCHASE_ORDER ||--|{ PURCHASE_ORDER_ITEM : contains
 ```
 
-The concrete schema and indexes will be documented alongside their migrations. Available quantity will be computed as `quantity_on_hand - quantity_reserved`, never stored.
+The `(product_id, warehouse_id)` inventory pair is unique. Database checks require on-hand and reserved quantities to remain non-negative and prevent reserved stock from exceeding on-hand stock. Available quantity is computed as `quantity_on_hand - quantity_reserved`, never stored.
 
 ## Migration policy
 

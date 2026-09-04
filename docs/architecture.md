@@ -2,7 +2,7 @@
 
 ## Current delivery
 
-Milestone 1 established the runnable vertical slice. Milestone 2 added authenticated sessions, role enforcement, the users module, and protected client routing. Milestone 3 adds the product catalog through the complete route → schema → service → repository flow. Warehouse and inventory behavior remains deliberately deferred to its owning milestones.
+Milestone 1 established the runnable vertical slice. Milestone 2 added identity and access control, and Milestone 3 added the product catalog. Milestone 4 completes the first operational inventory slice: warehouses, inventory balances, stock receipts, and adjustments. Inventory services own their transaction boundary and persist a balance change and its audit movement atomically.
 
 ## System context
 
@@ -27,7 +27,7 @@ flowchart LR
     Repository --> PostgreSQL[(PostgreSQL)]
 ```
 
-Routes stay thin. Services will define transaction boundaries for order and inventory workflows. Repositories are introduced when they remove persistence duplication, not as a mandatory wrapper around every query.
+Routes stay thin. Services define transaction boundaries for inventory workflows, and repositories centralize allowlisted sorting, aggregate queries, and locking reads. Inventory mutation services use PostgreSQL row locks for existing balances and commit the balance plus movement record together.
 
 ## Frontend boundaries
 

@@ -1,2 +1,1 @@
-"""Inventory feature (Milestones 4-5)."""
-
+"""Transactional inventory feature."""

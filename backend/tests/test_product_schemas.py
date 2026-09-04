@@ -44,6 +44,11 @@ def test_product_update_requires_at_least_one_field() -> None:
     with pytest.raises(ValidationError):
         ProductUpdate()
 
+    with pytest.raises(ValidationError):
+        ProductUpdate(name=None)
+
+    assert ProductUpdate(description=None).description is None
+
 
 @pytest.mark.parametrize("field", ["sku", "name", "category"])
 def test_product_create_rejects_blank_required_text(field: str) -> None:

@@ -1,4 +1,6 @@
-import { Card, Descriptions, Drawer, Empty, Space, Tag, Typography } from 'antd'
+import { useQuery } from '@tanstack/react-query'
+import { Card, Descriptions, Drawer, Empty, List, Space, Tag, Typography } from 'antd'
+import { getProductInventory } from '../../api/inventory'
 import type { Product } from '../../types/product'
 
 interface ProductDetailsDrawerProps {
@@ -9,6 +11,12 @@ interface ProductDetailsDrawerProps {
 const currency = new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR' })
 
 export function ProductDetailsDrawer({ product, onClose }: ProductDetailsDrawerProps) {
+  const inventoryQuery = useQuery({
+    queryKey: ['inventory', 'product', product?.id],
+    queryFn: () => getProductInventory(product?.id ?? 0),
+    enabled: Boolean(product),
+  })
+
   return (
     <Drawer
       title="Product details"
@@ -29,8 +37,17 @@ export function ProductDetailsDrawer({ product, onClose }: ProductDetailsDrawerP
             <Descriptions.Item label="Reorder level">{product.reorder_level}</Descriptions.Item>
             <Descriptions.Item label="Description">{product.description || '—'}</Descriptions.Item>
           </Descriptions>
-          <Card size="small" title="Inventory by warehouse">
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Inventory levels arrive in Milestone 4." />
+          <Card size="small" title="Inventory by warehouse" loading={inventoryQuery.isLoading}>
+            {inventoryQuery.data?.items.length ? (
+              <List
+                dataSource={inventoryQuery.data.items}
+                renderItem={(item) => (
+                  <List.Item extra={<Tag color={item.is_low_stock ? 'warning' : 'success'}>{item.available_quantity} available</Tag>}>
+                    <List.Item.Meta title={`${item.warehouse.code} — ${item.warehouse.name}`} description={`${item.quantity_on_hand} on hand · ${item.quantity_reserved} reserved`} />
+                  </List.Item>
+                )}
+              />
+            ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No stock has been recorded for this product." />}
           </Card>
           <Card size="small" title="Recent stock movements">
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Movement history arrives in Milestone 5." />
@@ -40,4 +57,3 @@ export function ProductDetailsDrawer({ product, onClose }: ProductDetailsDrawerP
     </Drawer>
   )
 }
-

@@ -37,5 +37,4 @@ flowchart LR
 
 The products screen uses TanStack Query for all server state. Search, filters, sorting, and pagination produce a new query key. Successful create, update, and deactivate mutations invalidate product and category queries. Employees receive a read-only interface; mutation controls are shown only for managers and administrators, while the API independently enforces the same rules.
 
-Product details intentionally show placeholders for inventory by warehouse and stock movements. Those data sources belong to Milestones 4 and 5 respectively.
-
+Product details now show live inventory by warehouse. Stock movement history remains a deliberate placeholder until Milestone 5 exposes the movement query API.
