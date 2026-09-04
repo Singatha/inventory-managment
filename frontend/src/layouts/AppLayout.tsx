@@ -12,9 +12,10 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Avatar, Badge, Breadcrumb, Button, Grid, Layout, Menu, Space, Typography } from 'antd'
+import { Avatar, Badge, Breadcrumb, Button, Dropdown, Grid, Layout, Menu, Space, Typography } from 'antd'
 import type { MenuProps } from 'antd'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../features/auth/AuthContext'
 
 const { Header, Sider, Content } = Layout
 const { useBreakpoint } = Grid
@@ -71,6 +72,13 @@ export function AppLayout() {
   const isMobile = !screens.md
   const effectiveCollapsed = isMobile || collapsed
   const pageTitle = titleForPath(location.pathname)
+  const { user, logout } = useAuth()
+  const initials = `${user?.first_name[0] ?? ''}${user?.last_name[0] ?? ''}`
+
+  function signOut() {
+    logout()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <Layout className="app-shell">
@@ -109,7 +117,21 @@ export function AppLayout() {
             <Badge dot offset={[-2, 2]}>
               <Button type="text" aria-label="Notifications" icon={<BellOutlined />} />
             </Badge>
-            <Avatar className="user-avatar">SF</Avatar>
+            <Dropdown
+              trigger={['click']}
+              menu={{
+                items: [
+                  { key: 'identity', label: <><Typography.Text strong>{user?.first_name} {user?.last_name}</Typography.Text><br /><Typography.Text type="secondary">{user?.email}</Typography.Text></>, disabled: true },
+                  { type: 'divider' },
+                  { key: 'logout', label: 'Sign out', danger: true, onClick: signOut },
+                ],
+              }}
+            >
+              <Button type="text" className="user-menu">
+                <Avatar className="user-avatar">{initials}</Avatar>
+                <span className="user-menu-name">{user?.first_name}</span>
+              </Button>
+            </Dropdown>
           </Space>
         </Header>
         <Content className="app-content">
@@ -120,4 +142,3 @@ export function AppLayout() {
     </Layout>
   )
 }
-

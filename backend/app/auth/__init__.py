@@ -1,2 +1,1 @@
-"""Authentication feature (Milestone 2)."""
-
+"""Authentication and authorization feature."""

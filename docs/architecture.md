@@ -1,8 +1,8 @@
 # Architecture
 
-## Milestone 1 goal
+## Current delivery
 
-Establish a runnable vertical slice: a browser can load the StockFlow shell, call the FastAPI health endpoint, and the backend is configured to use a healthy PostgreSQL service. Domain behavior is deliberately deferred.
+Milestone 1 established the runnable vertical slice. Milestone 2 adds authenticated sessions, role enforcement, the users module, and protected client routing. Product and inventory behavior remains deliberately deferred to its owning milestones.
 
 ## System context
 
@@ -36,4 +36,3 @@ Routes map to feature pages inside the shared application layout. Axios owns HTT
 ## Key tradeoff: modular monolith first
 
 A modular monolith provides one database transaction across orders and inventory, simple local operations, and fewer distributed failure modes. Feature packages preserve seams that could support later extraction, but extraction is not a goal until independent scaling or ownership demands it.
-

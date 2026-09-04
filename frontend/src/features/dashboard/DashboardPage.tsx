@@ -12,8 +12,8 @@ import { useHealth } from '../../hooks/useHealth'
 
 const milestones = [
   { title: 'Foundation', description: 'API, database, Docker, and application shell', status: 'Complete' },
-  { title: 'Identity & access', description: 'Authentication, users, and role-based access', status: 'Next' },
-  { title: 'Product catalog', description: 'Product management and searchable catalog', status: 'Planned' },
+  { title: 'Identity & access', description: 'Authentication, users, and role-based access', status: 'Complete' },
+  { title: 'Product catalog', description: 'Product management and searchable catalog', status: 'Next' },
 ]
 
 export function DashboardPage() {
@@ -37,8 +37,8 @@ export function DashboardPage() {
         className="foundation-alert"
         type="info"
         showIcon
-        message="Milestone 1 foundation is ready"
-        description="The domain modules are intentionally staged. Authentication and user access are next."
+        message="Milestone 2 identity and access is ready"
+        description="Sessions are protected with access and refresh tokens. The product catalog is next."
       />
 
       <Row gutter={[16, 16]}>
@@ -62,14 +62,14 @@ export function DashboardPage() {
             <Space direction="vertical" size={0} className="roadmap-list">
               {milestones.map((milestone, index) => (
                 <div className="roadmap-item" key={milestone.title}>
-                  <span className={`roadmap-index ${index === 0 ? 'is-complete' : ''}`}>
-                    {index === 0 ? <CheckCircleFilled /> : index + 1}
+                  <span className={`roadmap-index ${index < 2 ? 'is-complete' : ''}`}>
+                    {index < 2 ? <CheckCircleFilled /> : index + 1}
                   </span>
                   <div className="roadmap-copy">
                     <Typography.Text strong>{milestone.title}</Typography.Text>
                     <Typography.Text type="secondary">{milestone.description}</Typography.Text>
                   </div>
-                  <Tag color={index === 0 ? 'success' : index === 1 ? 'blue' : 'default'}>
+                  <Tag color={index < 2 ? 'success' : index === 2 ? 'blue' : 'default'}>
                     {milestone.status}
                   </Tag>
                 </div>
@@ -93,8 +93,8 @@ export function DashboardPage() {
               <span><span className="status-dot online" />PostgreSQL</span>
               <Typography.Text type="success">Configured</Typography.Text>
             </div>
-            <Button type="link" onClick={() => navigate('/users')}>
-              Continue to Milestone 2 <ArrowRightOutlined />
+            <Button type="link" onClick={() => navigate('/products')}>
+              Continue to Milestone 3 <ArrowRightOutlined />
             </Button>
           </Card>
         </Col>

@@ -6,8 +6,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-COPY . .
+COPY pyproject.toml README.md ./
+RUN mkdir -p app && touch app/__init__.py
 RUN pip install --upgrade pip && pip install -e ".[dev]"
+
+COPY . .
 
 FROM base AS development
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
