@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import get_settings
 from app.core.database import Base
+from app.products.models import Product  # noqa: F401 - registers metadata for autogenerate
 from app.users.models import User  # noqa: F401 - registers metadata for autogenerate
 
 config = context.config
