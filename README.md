@@ -2,7 +2,7 @@
 
 StockFlow is a production-oriented inventory and warehouse management system. It is being built as a modular monolith so transactional inventory rules remain easy to reason about while feature boundaries stay explicit.
 
-> Current delivery: **Milestone 1 — Foundation**
+> Current delivery: **Milestone 2 — Authentication and users**
 
 ## What is included
 
@@ -13,8 +13,11 @@ StockFlow is a production-oriented inventory and warehouse management system. It
 - Docker development workflow for the frontend, backend, and PostgreSQL
 - Backend and frontend smoke tests
 - Architecture and workflow documentation for the planned domain
+- Argon2 password hashing and signed JWT access/refresh tokens
+- Role-based API authorization and admin-only user management
+- Login, protected routes, automatic token refresh, and session-aware navigation
 
-Domain CRUD, authentication, and inventory workflows are intentionally not implemented yet. The project plan introduces them one milestone at a time so each change can be migrated, tested, and documented.
+Product and inventory workflows are intentionally not implemented yet. The project plan introduces them one milestone at a time so each change can be migrated, tested, and documented.
 
 ## Architecture
 
@@ -54,6 +57,8 @@ Then open:
 - API docs: http://localhost:8000/docs
 - Health check: http://localhost:8000/api/health
 
+The development bootstrap account defaults to `admin@stockflow.dev` / `ChangeMe123!`. Override both values in `.env` before starting the stack, and never use those defaults in a shared environment.
+
 Stop services with `docker compose down`. Add `-v` only when you intentionally want to delete local database data.
 
 ## Local development
@@ -87,6 +92,9 @@ ruff check .
 mypy app
 pytest
 
+# PostgreSQL integration tests (from the repository root)
+docker compose run --rm backend sh -c 'alembic upgrade head && RUN_INTEGRATION_TESTS=1 pytest -m integration'
+
 cd ../frontend
 npm run lint
 npm run test:run
@@ -108,7 +116,11 @@ docker compose run --rm frontend npm run test:run
 | `POSTGRES_DB` | PostgreSQL database name | `stockflow` |
 | `POSTGRES_USER` | PostgreSQL user | `stockflow` |
 | `POSTGRES_PASSWORD` | PostgreSQL password | development-only value |
-| `JWT_SECRET` | Signing secret reserved for Milestone 2 | development-only value |
+| `JWT_SECRET` | JWT signing secret | development-only value |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | Access-token lifetime | `30` |
+| `JWT_REFRESH_TOKEN_EXPIRE_DAYS` | Refresh-token lifetime | `7` |
+| `BOOTSTRAP_ADMIN_EMAIL` | Optional idempotent admin bootstrap | local admin email |
+| `BOOTSTRAP_ADMIN_PASSWORD` | Bootstrap admin password | development-only value |
 | `CORS_ORIGINS` | Comma-separated allowed browser origins | local frontend origins |
 | `RABBITMQ_URL` | Broker URL reserved for Milestone 9 | local RabbitMQ URL |
 | `VITE_API_URL` | Browser-facing API base path | `/api` |
@@ -117,13 +129,13 @@ Copy `.env.example` to `.env` and replace secrets before any shared or productio
 
 ## API documentation
 
-FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. Milestone 1 exposes `GET /api/health`.
+FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the OpenAPI schema at `/api/openapi.json`. See [authentication.md](docs/authentication.md) for the Milestone 2 endpoints and authorization rules.
 
 ## Roadmap
 
-1. **Foundation** — repository, API, web shell, PostgreSQL, Docker, health checks
-2. Authentication, users, login, protected routes
-3. Product CRUD and product UI
+1. ✅ **Foundation** — repository, API, web shell, PostgreSQL, Docker, health checks
+2. ✅ **Authentication** — users, JWT sessions, roles, login, protected routes
+3. **Next: Products** — product CRUD and product UI
 4. Warehouses, inventory, receipts, adjustments
 5. Transfers and stock movement audit history
 6. Orders, reservations, cancellation, shipment

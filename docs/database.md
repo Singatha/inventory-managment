@@ -2,14 +2,21 @@
 
 PostgreSQL is the sole transactional datastore. SQLAlchemy 2.x uses its async API through `asyncpg`; Alembic owns all schema changes.
 
-## Milestone 1 state
+## Current schema
 
-The initial revision is an intentionally empty baseline. It proves migration execution is part of startup without introducing domain tables before their milestones.
+The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
 
 ## Planned relationships
 
 ```mermaid
 erDiagram
+    USER {
+        bigint id PK
+        varchar email UK
+        varchar password_hash
+        enum role
+        boolean is_active
+    }
     PRODUCT ||--o{ INVENTORY : stocked_as
     WAREHOUSE ||--o{ INVENTORY : holds
     PRODUCT ||--o{ STOCK_MOVEMENT : records
@@ -29,4 +36,3 @@ The concrete schema and indexes will be documented alongside their migrations. A
 - Production startup never calls ORM `create_all`.
 - Downgrades should be safe when practical; destructive reversals require explicit operational review.
 - Constraints protect invariants in addition to application validation.
-

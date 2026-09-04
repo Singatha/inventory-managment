@@ -2,6 +2,10 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './layouts/AppLayout'
 import { DashboardPage } from './features/dashboard/DashboardPage'
 import { ComingSoonPage } from './components/ComingSoonPage'
+import { LoginPage } from './features/auth/LoginPage'
+import { ProtectedRoute } from './features/auth/ProtectedRoute'
+import { RoleRoute } from './features/auth/RoleRoute'
+import { UsersPage } from './features/users/UsersPage'
 
 const pages: Record<string, { title: string; milestone: number }> = {
   products: { title: 'Products', milestone: 3 },
@@ -11,25 +15,27 @@ const pages: Record<string, { title: string; milestone: number }> = {
   orders: { title: 'Orders', milestone: 6 },
   suppliers: { title: 'Suppliers', milestone: 7 },
   'purchase-orders': { title: 'Purchase orders', milestone: 7 },
-  users: { title: 'Users', milestone: 2 },
   settings: { title: 'Settings', milestone: 12 },
 }
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<AppLayout />}>
-        <Route index element={<DashboardPage />} />
-        {Object.entries(pages).map(([path, page]) => (
-          <Route
-            key={path}
-            path={path}
-            element={<ComingSoonPage title={page.title} milestone={page.milestone} />}
-          />
-        ))}
-        <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="users" element={<RoleRoute roles={['ADMIN']}><UsersPage /></RoleRoute>} />
+          {Object.entries(pages).map(([path, page]) => (
+            <Route
+              key={path}
+              path={path}
+              element={<ComingSoonPage title={page.title} milestone={page.milestone} />}
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
       </Route>
     </Routes>
   )
 }
-

@@ -1,2 +1,1 @@
-"""Users feature (Milestone 2)."""
-
+"""User administration feature."""

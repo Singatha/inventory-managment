@@ -6,6 +6,7 @@ import { App as AntApp, ConfigProvider } from 'antd'
 import 'antd/dist/reset.css'
 import './styles.css'
 import App from './App'
+import { AuthProvider } from './features/auth/AuthContext'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,11 +29,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AntApp>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <App />
+            <AuthProvider>
+              <App />
+            </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </AntApp>
     </ConfigProvider>
   </React.StrictMode>,
 )
-
