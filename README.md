@@ -36,8 +36,7 @@ Feature modules live under `backend/app/` and `frontend/src/features/`. HTTP rou
 ├── frontend/            React admin application and tests
 ├── docs/                Architecture and domain documentation
 ├── docker-compose.yml   Local development services
-├── .env.example         Safe configuration template
-└── Makefile             Common development commands
+└── .env.example         Safe configuration template
 ```
 
 ## Quick start with Docker
@@ -94,7 +93,12 @@ npm run test:run
 npm run build
 ```
 
-Or run the test suites in containers with `make test`.
+Or run the test suites in containers:
+
+```bash
+docker compose run --rm backend pytest
+docker compose run --rm frontend npm run test:run
+```
 
 ## Configuration
 
@@ -137,4 +141,3 @@ FastAPI serves interactive Swagger UI at `/docs`, ReDoc at `/redoc`, and the Ope
 - Inventory changes are transactional and auditable.
 - Alembic owns schema evolution; runtime auto-creation is not used.
 - Messaging is added only after the synchronous core is correct.
-
