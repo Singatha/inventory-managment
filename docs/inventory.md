@@ -52,4 +52,4 @@ The list supports product/warehouse search, warehouse and low-stock filters, pag
 - Transfer balance updates and their paired `TRANSFER_OUT`/`TRANSFER_IN` movements commit or roll back together.
 - Existing source and destination inventory rows are locked in stable warehouse-ID order.
 
-Movement types needed by order workflows already exist in the enum. Reservations, releases, shipments, and returns are introduced with the owning workflows in Milestone 6.
+Order confirmation, cancellation, and shipment now use the existing `RESERVE`, `RELEASE`, and `SHIPMENT` movement types. See [orders.md](orders.md) for their transactional rules.
