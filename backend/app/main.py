@@ -11,6 +11,7 @@ from app.core.logging import configure_logging
 from app.health.router import router as health_router
 from app.inventory.router import movement_router
 from app.inventory.router import router as inventory_router
+from app.orders.router import router as orders_router
 from app.products.router import router as products_router
 from app.users.router import router as users_router
 from app.warehouses.router import router as warehouses_router
@@ -48,6 +49,7 @@ def create_app() -> FastAPI:
     application.include_router(warehouses_router, prefix="/api")
     application.include_router(inventory_router, prefix="/api")
     application.include_router(movement_router, prefix="/api")
+    application.include_router(orders_router, prefix="/api")
     return application
 
 

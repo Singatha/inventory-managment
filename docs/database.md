@@ -4,7 +4,7 @@ PostgreSQL is the sole transactional datastore. SQLAlchemy 2.x uses its async AP
 
 ## Current schema
 
-The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`. Milestone 4 adds `warehouses`, `inventory`, `stock_movements`, and the `stock_movement_type` enum. Milestone 5 adds movement-history indexes for warehouse, type, and transfer references. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
+The initial revision is an intentionally empty baseline. Milestone 2 adds `users` and the PostgreSQL `user_role` enum. Milestone 3 adds `products`. Milestone 4 adds `warehouses`, `inventory`, `stock_movements`, and the `stock_movement_type` enum. Milestone 5 adds movement-history indexes. Milestone 6 adds `orders`, `order_items`, and the `order_status` enum. Emails are normalized to lowercase before persistence and protected by a unique constraint. Password hashes are stored, never plaintext passwords.
 
 ## Current inventory relationships
 
@@ -47,11 +47,26 @@ erDiagram
         int quantity
         bigint created_by FK
     }
+    ORDER {
+        bigint id PK
+        varchar order_number UK
+        enum status
+        bigint created_by FK
+    }
+    ORDER_ITEM {
+        bigint id PK
+        bigint order_id FK
+        bigint product_id FK
+        bigint warehouse_id FK
+        int quantity
+        numeric unit_price
+    }
     PRODUCT ||--o{ INVENTORY : stocked_as
     WAREHOUSE ||--o{ INVENTORY : holds
     PRODUCT ||--o{ STOCK_MOVEMENT : records
     WAREHOUSE ||--o{ STOCK_MOVEMENT : records
     USER ||--o{ STOCK_MOVEMENT : performs
+    USER ||--o{ ORDER : creates
     ORDER ||--|{ ORDER_ITEM : contains
     PRODUCT ||--o{ ORDER_ITEM : ordered
     WAREHOUSE ||--o{ ORDER_ITEM : fulfilled_from

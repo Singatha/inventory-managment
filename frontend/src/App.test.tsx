@@ -35,6 +35,13 @@ vi.mock('./api/inventory', () => ({
   transferStock: vi.fn(),
 }))
 
+vi.mock('./api/orders', () => ({
+  getOrders: vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, page_size: 1 }),
+  getOrder: vi.fn(),
+  createOrder: vi.fn(),
+  transitionOrder: vi.fn(),
+}))
+
 vi.mock('./features/auth/AuthContext', () => ({
   useAuth: () => ({
     user: { id: 1, email: 'admin@stockflow.dev', first_name: 'StockFlow', last_name: 'Admin', role: 'ADMIN', is_active: true },
@@ -59,6 +66,6 @@ test('renders the dashboard shell and milestone status', async () => {
 
   expect(screen.getByLabelText('StockFlow home')).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: 'Good morning' })).toBeInTheDocument()
-  expect(screen.getByText('Milestone 5 stock movement flow is ready')).toBeInTheDocument()
+  expect(screen.getByText('Milestone 6 order lifecycle is ready')).toBeInTheDocument()
   expect(screen.getByText('API operational')).toBeInTheDocument()
 })

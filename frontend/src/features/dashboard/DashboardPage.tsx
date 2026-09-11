@@ -1,9 +1,9 @@
 import {
-  AlertOutlined,
   ArrowRightOutlined,
   CheckCircleFilled,
   DatabaseOutlined,
   InboxOutlined,
+  ShoppingCartOutlined,
   ShopOutlined,
 } from '@ant-design/icons'
 import { Alert, Button, Card, Col, Row, Space, Statistic, Tag, Typography } from 'antd'
@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getProducts } from '../../api/products'
 import { getInventory } from '../../api/inventory'
 import { getWarehouses } from '../../api/warehouses'
+import { getOrders } from '../../api/orders'
 import { useHealth } from '../../hooks/useHealth'
 
 const milestones = [
@@ -20,7 +21,8 @@ const milestones = [
   { title: 'Product catalog', description: 'Product management and searchable catalog', status: 'Complete' },
   { title: 'Inventory operations', description: 'Warehouses, receipts, and stock adjustments', status: 'Complete' },
   { title: 'Stock movement flow', description: 'Transfers and movement audit history', status: 'Complete' },
-  { title: 'Order lifecycle', description: 'Reservations, cancellation, and shipment', status: 'Next' },
+  { title: 'Order lifecycle', description: 'Reservations, cancellation, and shipment', status: 'Complete' },
+  { title: 'Procurement', description: 'Suppliers and purchase order receiving', status: 'Next' },
 ]
 
 export function DashboardPage() {
@@ -39,6 +41,10 @@ export function DashboardPage() {
     queryKey: ['inventory', 'dashboard-summary'],
     queryFn: () => getInventory({ page: 1, page_size: 1 }),
   })
+  const orderSummary = useQuery({
+    queryKey: ['orders', 'dashboard-summary'],
+    queryFn: () => getOrders({ page: 1, page_size: 1, order_status: 'PENDING' }),
+  })
 
   return (
     <section className="page-section">
@@ -56,8 +62,8 @@ export function DashboardPage() {
         className="foundation-alert"
         type="info"
         showIcon
-        message="Milestone 5 stock movement flow is ready"
-        description="Warehouse transfers are atomic and every stock change is traceable. Order reservations and shipments are next."
+        message="Milestone 6 order lifecycle is ready"
+        description="Orders now reserve inventory, release it on cancellation, and consume it atomically at shipment. Supplier procurement is next."
       />
 
       <Row gutter={[16, 16]}>
@@ -71,7 +77,7 @@ export function DashboardPage() {
           <Card loading={inventorySummary.isLoading}><Statistic title="Inventory units" value={inventorySummary.data?.total_available_quantity ?? 0} prefix={<DatabaseOutlined />} /></Card>
         </Col>
         <Col xs={24} sm={12} xl={6}>
-          <Card loading={inventorySummary.isLoading}><Statistic title="Low-stock alerts" value={inventorySummary.data?.low_stock_count ?? 0} prefix={<AlertOutlined />} /></Card>
+          <Card loading={orderSummary.isLoading}><Statistic title="Pending orders" value={orderSummary.data?.total ?? 0} prefix={<ShoppingCartOutlined />} /></Card>
         </Col>
       </Row>
 
@@ -81,14 +87,14 @@ export function DashboardPage() {
             <Space direction="vertical" size={0} className="roadmap-list">
               {milestones.map((milestone, index) => (
                 <div className="roadmap-item" key={milestone.title}>
-                  <span className={`roadmap-index ${index < 5 ? 'is-complete' : ''}`}>
-                    {index < 5 ? <CheckCircleFilled /> : index + 1}
+                  <span className={`roadmap-index ${index < 6 ? 'is-complete' : ''}`}>
+                    {index < 6 ? <CheckCircleFilled /> : index + 1}
                   </span>
                   <div className="roadmap-copy">
                     <Typography.Text strong>{milestone.title}</Typography.Text>
                     <Typography.Text type="secondary">{milestone.description}</Typography.Text>
                   </div>
-                  <Tag color={index < 5 ? 'success' : index === 5 ? 'blue' : 'default'}>
+                  <Tag color={index < 6 ? 'success' : index === 6 ? 'blue' : 'default'}>
                     {milestone.status}
                   </Tag>
                 </div>
@@ -112,8 +118,8 @@ export function DashboardPage() {
               <span><span className="status-dot online" />PostgreSQL</span>
               <Typography.Text type="success">Configured</Typography.Text>
             </div>
-            <Button type="link" onClick={() => navigate('/orders')}>
-              Continue to Milestone 6 <ArrowRightOutlined />
+            <Button type="link" onClick={() => navigate('/suppliers')}>
+              Continue to procurement <ArrowRightOutlined />
             </Button>
           </Card>
         </Col>
